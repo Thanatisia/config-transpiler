@@ -1,0 +1,13 @@
+{
+    "version": "3.7",
+    "services": {
+        "hello_world": {
+            "image": "author/name:tag",
+            "container_name": "hello_world",
+            "restart": "unless-stopped",
+            "environment": [
+                "env=val"
+            ]
+        }
+    }
+}

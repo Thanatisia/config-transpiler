@@ -1,0 +1,8 @@
+# git ignore - ignore all these directories/files
+
+## For Python
+### Python cache files
+__pycache__/
+
+### Virtual Environment
+env/
