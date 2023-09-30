@@ -12,7 +12,7 @@ import sys
 
 ## External Libraries
 import lib.configs as configs
-from lib.configs import YAML, JSON, Dictionary
+from lib.configs import YAMLConfig, JSONConfig, Dictionary
 
 def setup():
     """
@@ -24,8 +24,8 @@ def setup():
     json_cfg_filename = "data.json"
 
     # Initialize Classes
-    cs_Yaml = YAML(yaml_cfg_filename)
-    cs_JSON = JSON(json_cfg_filename, "w+")
+    cs_Yaml = YAMLConfig(yaml_cfg_filename)
+    cs_JSON = JSONConfig(json_cfg_filename)
     cs_Dict = Dictionary()
 
 def print_yaml(yaml_Contents):
@@ -45,7 +45,7 @@ def print_yaml(yaml_Contents):
                 for k,v in v.items():
                     print("\t{}".format(v))
 
-def main():
+def convert_yaml_to_json():
     """
     Open, read, print and close YAML configuration file
     """
@@ -70,6 +70,7 @@ def main():
     """
     print("Writing Dictionary object to JSON file...")
     # Open file and write the dictionary object to JSON
+    cs_JSON.set_mode("w+")
     cs_JSON.open_file()
     cs_JSON.write_config(yaml_Contents)
     # Close file after usage
@@ -91,6 +92,65 @@ def main():
 
     # Print JSON contents
     print(json_Contents)
+
+def convert_json_to_yaml():
+    """
+    Open, read, print and close JSON configuration file
+    """
+    print("===================================")
+    print(" Converting JSON file [{}] => [{}] ".format(json_cfg_filename, yaml_cfg_filename))
+    print("===================================")
+
+    print("")
+
+    print("Reading JSON Configuration file...")
+    cs_JSON.open_file()
+    json_Contents = cs_JSON.read_config()
+    # Close file after usage
+    cs_JSON.close_file()
+
+    # Print YAML contents
+    print_yaml(json_Contents)
+
+    print("")
+
+    """
+    Take JSON config file and output as YAML
+    """
+    print("Writing Dictionary object to YAML file...")
+    # Set new file name
+    cs_Yaml.set_filename("data2.yaml")
+    # Set file write mode to Write+Read
+    cs_Yaml.set_mode("w+")
+    # Open file and write the dictionary object to JSON
+    cs_Yaml.open_file()
+    cs_Yaml.write_config(json_Contents)
+    # Close file after usage
+    cs_Yaml.close_file()
+
+    print("")
+
+    print("(+) Successfully converted JSON file [{}] => YAML file [{}]".format(json_cfg_filename, yaml_cfg_filename))
+
+    print("")
+
+    print("Reading newly created YAML file...")
+    # Set new file name
+    cs_Yaml.set_filename("data2.yaml")
+    # Set file to read and open file and read contents
+    cs_Yaml.set_mode("r")
+    # Open file and write the dictionary object to JSON
+    cs_Yaml.open_file()
+    yaml_Contents = cs_Yaml.read_config()
+    # Close file after usage
+    cs_Yaml.close_file()
+
+    # Print JSON contents
+    print(yaml_Contents)
+
+def main():
+    convert_yaml_to_json()
+    convert_json_to_yaml()
 
 if __name__ == "__main__":
     setup()

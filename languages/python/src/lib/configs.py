@@ -6,7 +6,7 @@ import sys
 import json
 
 ## External Libraries
-from ruamel.yaml import YAML as yaml
+from ruamel.yaml import YAML
 from ruamel.yaml.main import round_trip_load as yaml_load, round_trip_dump as yaml_dump
 
 ## Get system information
@@ -75,7 +75,7 @@ class Configuration:
             file_exists = True
         return file_exists
 
-class YAML(Configuration):
+class YAMLConfig(Configuration):
     """
     YAML Configuration File Handler
     inheriting the configuration file class
@@ -85,10 +85,17 @@ class YAML(Configuration):
         Class constructor
         """
         ## To keep the inheritance of the parent's __init__() function
-        super(YAML, self).__init__(file_name, "yaml", mode)
+        super(YAMLConfig, self).__init__(file_name, "yaml", mode)
         self.configuration = Configuration
+
+        # Initialize Classes
+        self.yaml = YAML()
+
+        # Set properties
         self.set_filename(file_name)
         self.set_mode(mode)
+
+        # Initialize Variables
         self.file = None
 
     def set_filename(self, file_name):
@@ -120,14 +127,25 @@ class YAML(Configuration):
             self.file.close()
             self.file = None
 
+    def convert_dict_to_yaml(self, data):
+        """
+        Convert a dictionary object to YAML file
+
+        :: Params
+        - data : The dictionary object you wish to convert
+            Type: Dictionary
+        """
+        return self.yaml.dump(data)
+
     def write_config(self, data):
         """
         Dump and write dictionary object to YAML configuration file
         """
+        print("Data: {}, Type: {}".format(data, type(data)))
         # Check if data is not empty and file is opened
         if (data != None) and (self.file != None):
             # Dump the data
-            yaml.dump(data, self.file)
+            self.yaml.dump(data, self.file)
 
     def read_config(self):
         """
@@ -150,7 +168,7 @@ class YAML(Configuration):
             return yaml_load(yaml_str)
 
 
-class TOML(Configuration):
+class TOMLConfig(Configuration):
     """
     TOML Configuration File 
     inheriting the configuration file class
@@ -160,12 +178,12 @@ class TOML(Configuration):
         Constructor
         """
         ## To keep the inheritance of the parent's __init__() function
-        super(TOML, self).__init__(file_name, "toml", mode)
+        super(TOMLConfig, self).__init__(file_name, "toml", mode)
 
         # Initialize Variables
         self.configuration = Configuration
 
-class JSON(Configuration):
+class JSONConfig(Configuration):
     """
     JSON Configuration File 
     inheriting the configuration file class
@@ -175,7 +193,7 @@ class JSON(Configuration):
         Constructor
         """
         ## To keep the inheritance of the parent's __init__() function
-        super(JSON, self).__init__(file_name, "json", mode)
+        super(JSONConfig, self).__init__(file_name, "json", mode)
 
         # Initialize Variables
         self.configuration = Configuration
