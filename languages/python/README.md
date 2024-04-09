@@ -11,11 +11,8 @@ YAML <=> TOML <=> JSON Configuration file converter/transpiler
 - yaml
     + ruamel.yaml : YAML parser
 - toml
-    - Python version >= 3.11
-        + tomllib : TOML parser; Built-in
-    - Python version < 3.11
-        + tomli : TOML parser - Read only
-        + tomli-w : TOML parser writer - Write-only counterpart to tomli
+    + tomllib : TOML parser; Built-in
+    + toml : TOML parser with file output (write)
 - JSON
     + json : JSON parser; Built-in
 

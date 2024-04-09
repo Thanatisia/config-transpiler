@@ -1,3 +1,6 @@
+# Python packages and dependencies
+
+pyright
 ruamel.yaml
-tomli
-tomli-w
+toml
+
