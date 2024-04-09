@@ -3,7 +3,8 @@
 ## Table of Contents
 > version | date        time | status
 + v0.1.0  | 2023-09-28 0846H | Pushed to main
-+ v0.2.0  | 2023-09-30 1104H | Development; Testing
++ v0.2.0  | 2023-09-30 1104H | Pushed to main
++ v0.3.0  | 2024-04-10 0009H | Development; Testing
 
 ## Entries
 ### v0.1.0
@@ -26,4 +27,18 @@
         + Removed the 'as yaml' label when importing YAML, and initialized 'yaml' as class variable in the YAMLConfigs class instead
     - Fixes
         + Fixed bug where dumping of Dictionary Object via '.write_config()' will throw an error
+
+### v0.3.0
+- Updates
+    - Updated document 'README.md'
+        + Updated depedencies with toml
+    - Updated document 'requirements.txt'
+        + Added new packages
+    - Updated python module 'configs.py' in 'src/lib'
+        - Removed deprecated function from module 'ruamel.yaml.main'
+            + Replaced with 'self.yaml.load()'
+        + Added functions into class 'TOMLConfig'
+        + Implemented TOML Transpiler logic
+    - Updated source file 'main.py' in 'src/'
+        + Implemented TOMLConfig test functions
 

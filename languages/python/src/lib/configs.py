@@ -4,21 +4,16 @@ Configuration File Library
 import os
 import sys
 import json
+import tomllib
+import toml
 
 ## External Libraries
 from ruamel.yaml import YAML
-from ruamel.yaml.main import round_trip_load as yaml_load, round_trip_dump as yaml_dump
+from ruamel.yaml.main import round_trip_dump as yaml_dump
 
 ## Get system information
 version_major = sys.version_info.major
 version_minor = sys.version_info.minor
-
-## Version-specific
-if (version_major == 3) and (version_minor < 11):
-    import tomli as toml
-    import tomli_w as toml_write
-else:
-    import tomllib as toml
 
 class Configuration:
     """
@@ -42,7 +37,7 @@ class Configuration:
 
         if (file_Exists == True) and (file_Open == False):
             self.cfg_file = open(self.file_name, self.open_mode)
-        
+
     def close_file(self):
         """
         Close file after usage
@@ -158,14 +153,14 @@ class YAMLConfig(Configuration):
             # Open file if not opened
             file = open(self.file_name)
 
-        return yaml_load(file)
+        return self.yaml.load(file)
 
     def parse_yaml_str_to_dict(self, yaml_str):
         """
         Parse YAML strings into dictionary object
         """
         if yaml_str != "":
-            return yaml_load(yaml_str)
+            return self.yaml.load(yaml_str)
 
 
 class TOMLConfig(Configuration):
@@ -182,6 +177,93 @@ class TOMLConfig(Configuration):
 
         # Initialize Variables
         self.configuration = Configuration
+
+        # Initialize Classes
+
+        # Set properties
+        self.set_filename(file_name)
+        self.set_mode(mode)
+
+        # Initialize Variables
+        self.file = None
+
+    def set_filename(self, file_name):
+        """
+        Explicitly set file name
+        """
+        self.file_name = file_name
+
+    def set_mode(self, mode):
+        """
+        Explicitly specify mode to use
+        """
+        self.mode = mode
+
+    def open_file(self):
+        """
+        Open file and import file
+        """
+        # Open file for use
+        self.file = open(self.file_name, self.mode)
+
+    def close_file(self):
+        """
+        Close file after usage and set empty file object
+        """
+        # Check if file is opened
+        if self.file != None:
+            # Close file after use
+            self.file.close()
+            self.file = None
+
+    def convert_dict_to_toml(self, data):
+        """
+        Convert a dictionary object to TOML file
+
+        :: Params
+        - data : The dictionary object you wish to convert
+            Type: Dictionary
+        """
+        return toml.dumps(data)
+
+    def write_config(self, data):
+        """
+        Dump and write dictionary object to TOML configuration file
+        """
+        print("Data: {}, Type: {}".format(data, type(data)))
+        # Check if data is not empty and file is opened
+        if (data != None) and (self.file != None):
+            # Dump the data
+            toml.dump(data, self.file)
+
+    def read_config(self):
+        """
+        Load and read TOML configuration file contents to dictionary
+        """
+        # Initialize Variables
+        results = {}
+        file = self.file
+
+        # Check if file is opened
+        if (file == None):
+            # Open file if not opened
+            file = open(self.file_name)
+
+        # Read contents
+        file_contents = file.read()
+
+        # Load the TOML file contents into dictionary
+        results = tomllib.loads(file_contents)
+
+        # Return
+        return results
+
+    def parse_toml_str_to_dict(self, toml_str):
+        """
+        Parse TOML strings into dictionary object
+        """
+        if toml_str != "":
+            return tomllib.loads(toml_str)
 
 class JSONConfig(Configuration):
     """
